@@ -2,9 +2,14 @@ package com.re.bi.itemstore.domain.item;
 
 import com.re.bi.itemstore.domain.AbstractValueObject;
 
+import javax.persistence.Embeddable;
 import java.time.LocalDateTime;
 
+@Embeddable
 public class ItemDateTime extends AbstractValueObject<LocalDateTime> {
+  protected ItemDateTime() {
+  }
+
   public ItemDateTime(LocalDateTime value) {
     super(value);
   }

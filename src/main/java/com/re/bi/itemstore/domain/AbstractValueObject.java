@@ -1,9 +1,14 @@
 package com.re.bi.itemstore.domain;
 
+import javax.persistence.MappedSuperclass;
 import java.util.Objects;
 
+@MappedSuperclass
 public abstract class AbstractValueObject<V> {
-  private final V value;
+  private V value;
+
+  protected AbstractValueObject() {
+  }
 
   public AbstractValueObject(V value) {
     if (valid(value)) {

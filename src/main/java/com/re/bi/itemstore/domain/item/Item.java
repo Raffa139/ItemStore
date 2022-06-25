@@ -1,6 +1,8 @@
 package com.re.bi.itemstore.domain.item;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class Item {
@@ -12,10 +14,13 @@ public class Item {
 
   private ItemDateTime updateTime;
 
+  private Set<ItemTag> tags;
+
   public Item(ItemValue value) {
     this.uuid = new ItemUuid(UUID.randomUUID());
     this.value = value;
     this.creationTime = new ItemDateTime(LocalDateTime.now());
+    this.tags = new HashSet<>();
   }
 
   public ItemUuid getUuid() {
@@ -32,6 +37,10 @@ public class Item {
 
   public ItemDateTime getUpdateTime() {
     return updateTime;
+  }
+
+  public Set<ItemTag> getTags() {
+    return tags;
   }
 
   public void updateItemValue(ItemValue value) {

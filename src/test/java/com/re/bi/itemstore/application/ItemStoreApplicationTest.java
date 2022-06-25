@@ -1,4 +1,4 @@
-package com.re.bi.itemstore;
+package com.re.bi.itemstore.application;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

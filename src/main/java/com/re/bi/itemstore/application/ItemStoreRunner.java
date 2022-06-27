@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -23,12 +25,12 @@ public class ItemStoreRunner implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    Set<Tag> tags = new HashSet<>();
+    List<Tag> tagList = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
-      tags.add(new Tag(new TagValue("Tag" + i)));
+      tagList.add(new Tag(new TagValue("Tag" + i)));
     }
 
-    tagRepository.saveAll(tags);
+    Set<Tag> tags = new HashSet<>(tagRepository.saveAll(tagList));
 
     Item item = new Item(new ItemValue(10));
     item.setTags(tags);

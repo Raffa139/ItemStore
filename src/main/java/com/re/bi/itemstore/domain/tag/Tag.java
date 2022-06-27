@@ -1,6 +1,7 @@
 package com.re.bi.itemstore.domain.tag;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "TAB_ITEM_TAG")
@@ -21,7 +22,26 @@ public class Tag {
     this.value = value;
   }
 
+  public Long getId() {
+    return id;
+  }
+
   public TagValue getValue() {
     return value;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Tag tag = (Tag) o;
+
+    return Objects.equals(id, tag.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id != null ? id.hashCode() : 0;
   }
 }

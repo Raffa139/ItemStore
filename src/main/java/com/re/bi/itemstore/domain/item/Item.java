@@ -5,6 +5,7 @@ import com.re.bi.itemstore.domain.tag.Tag;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -22,16 +23,16 @@ public class Item {
 
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "ITEM_CREATION_DATE", nullable = false))
-  private ItemDateTime creationTime;
+  private ItemDateTime creationDateTime;
 
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "ITEM_UPDATE_DATE"))
-  private ItemDateTime updateTime;
+  private ItemDateTime updateDateTime;
 
   @ManyToMany
   @JoinTable(
       name = "TAB_TAGGED_ITEM",
-      joinColumns = @JoinColumn(name = "ITEM_UUID"),
+      joinColumns = @JoinColumn(name = "ITEM_ID"),
       inverseJoinColumns = @JoinColumn(name = "ITAG_ID")
   )
   private Set<Tag> tags;
@@ -41,7 +42,7 @@ public class Item {
 
   public Item(ItemValue value) {
     this.value = value;
-    this.creationTime = new ItemDateTime(LocalDateTime.now());
+    this.creationDateTime = new ItemDateTime(LocalDateTime.now());
     this.tags = new HashSet<>();
   }
 
@@ -53,12 +54,12 @@ public class Item {
     return value;
   }
 
-  public ItemDateTime getCreationTime() {
-    return creationTime;
+  public ItemDateTime getCreationDateTime() {
+    return creationDateTime;
   }
 
-  public ItemDateTime getUpdateTime() {
-    return updateTime;
+  public ItemDateTime getUpdateDateTime() {
+    return updateDateTime;
   }
 
   public Set<Tag> getTags() {
@@ -75,6 +76,21 @@ public class Item {
 
   public void updateItemValue(ItemValue value) {
     this.value = value;
-    this.updateTime = new ItemDateTime(LocalDateTime.now());
+    this.updateDateTime = new ItemDateTime(LocalDateTime.now());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Item item = (Item) o;
+
+    return Objects.equals(id, item.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id != null ? id.hashCode() : 0;
   }
 }

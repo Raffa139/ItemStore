@@ -6,15 +6,15 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "TAB_ITEM")
 public class Item {
   @Id
-  @Embedded
-  @AttributeOverride(name = "value", column = @Column(name = "ITEM_UUID", nullable = false, unique = true))
-  private ItemUuid uuid;
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_seq_gen")
+  @SequenceGenerator(name = "item_seq_gen", initialValue = 1000, allocationSize = 1)
+  @Column(name = "ITEM_ID", nullable = false)
+  private Long id;
 
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "ITEM_VALUE", nullable = false))
@@ -40,14 +40,13 @@ public class Item {
   }
 
   public Item(ItemValue value) {
-    this.uuid = new ItemUuid(UUID.randomUUID());
     this.value = value;
     this.creationTime = new ItemDateTime(LocalDateTime.now());
     this.tags = new HashSet<>();
   }
 
-  public ItemUuid getUuid() {
-    return uuid;
+  public Long getId() {
+    return id;
   }
 
   public ItemValue getValue() {

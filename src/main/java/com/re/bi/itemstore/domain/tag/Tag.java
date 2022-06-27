@@ -8,7 +8,7 @@ public class Tag {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_tag_seq_gen")
   @SequenceGenerator(name = "item_tag_seq_gen", initialValue = 1000, allocationSize = 1)
-  @Column(name = "ITAG_ID")
+  @Column(name = "ITAG_ID", nullable = false)
   private Long id;
 
   @AttributeOverride(name = "value", column = @Column(name = "ITAG_VALUE", nullable = false, unique = true))

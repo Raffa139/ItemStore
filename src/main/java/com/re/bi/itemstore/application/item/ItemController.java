@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,5 +26,16 @@ public class ItemController {
     return ResponseEntity.ok(CollectionModel.of(items.stream()
         .map(ItemModel::new)
         .collect(Collectors.toList())));
+  }
+
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<ItemModel> getItem(@PathVariable Long id) {
+    Optional<Item> optional = itemRepository.findById(id);
+
+    if (optional.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok(new ItemModel(optional.get()));
   }
 }

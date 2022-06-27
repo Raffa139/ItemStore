@@ -1,16 +1,16 @@
 package com.re.bi.itemstore.domain.item;
 
+import com.re.bi.itemstore.domain.AbstractEntity;
 import com.re.bi.itemstore.domain.tag.Tag;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "TAB_ITEM")
-public class Item {
+public class Item extends AbstractEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_seq_gen")
   @SequenceGenerator(name = "item_seq_gen", initialValue = 1000, allocationSize = 1)
@@ -46,6 +46,7 @@ public class Item {
     this.tags = new HashSet<>();
   }
 
+  @Override
   public Long getId() {
     return id;
   }
@@ -77,20 +78,5 @@ public class Item {
   public void updateItemValue(ItemValue value) {
     this.value = value;
     this.updateDateTime = new ItemDateTime(LocalDateTime.now());
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    Item item = (Item) o;
-
-    return Objects.equals(id, item.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return id != null ? id.hashCode() : 0;
   }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-public class ItemStoreRunner implements CommandLineRunner {
+public class ItemStoreTestDataRunner implements CommandLineRunner {
   @Autowired
   private ItemRepository itemRepository;
 

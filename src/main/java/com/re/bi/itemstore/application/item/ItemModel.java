@@ -22,11 +22,11 @@ public class ItemModel extends RepresentationModel<ItemModel> {
   @JsonSerialize(converter = ItemValueConverter.class)
   private ItemValue value;
 
-  @JsonProperty("creation_date_time")
+  @JsonProperty("creationDateTime")
   @JsonSerialize(converter = ItemDateTimeConverter.class)
   private ItemDateTime creationDateTime;
 
-  @JsonProperty("update_date_time")
+  @JsonProperty("updateDateTime")
   @JsonSerialize(converter = ItemDateTimeConverter.class)
   private ItemDateTime updateDateTime;
 

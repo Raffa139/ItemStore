@@ -32,8 +32,12 @@ public class ItemStoreTestDataRunner implements CommandLineRunner {
 
     Set<Tag> tags = new HashSet<>(tagRepository.saveAll(tagList));
 
-    Item item = new Item(new ItemValue(10));
-    item.setTags(tags);
-    itemRepository.save(item);
+    List<Item> items = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      Item item = new Item(new ItemValue(i+100));
+      item.setTags(tags);
+      items.add(item);
+    }
+    itemRepository.saveAll(items);
   }
 }

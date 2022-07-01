@@ -2,6 +2,7 @@ package com.re.bi.itemstore.application.item;
 
 import com.re.bi.itemstore.domain.item.Item;
 import com.re.bi.itemstore.domain.item.ItemRepository;
+import com.re.bi.itemstore.domain.item.ItemValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,11 +29,11 @@ public class ItemController {
     Specification<Item> specification = null;
 
     if (search != null) {
-      ItemSpecification.ItemSpecificationBuilder builder = ItemSpecification.newItemSpecification();
+      ItemValueSpecification.ItemValueSpecificationBuilder builder = ItemValueSpecification.newItemValueSpecification();
       Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?),");
       Matcher matcher = pattern.matcher(search + ",");
       while (matcher.find()) {
-        builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        builder.with(matcher.group(1), matcher.group(2), new ItemValue(Integer.parseInt(matcher.group(3))));
       }
       specification = builder.build();
     }

@@ -34,8 +34,8 @@ public class ItemStoreTestDataRunner implements CommandLineRunner {
 
     List<Item> items = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
-      Item item = new Item(new ItemValue(i+100));
-      item.setTags(tags);
+      Item item = new Item(new ItemValue(i*10+100));
+      //item.setTags(tags);
       items.add(item);
     }
     itemRepository.saveAll(items);

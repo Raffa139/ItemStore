@@ -2,16 +2,14 @@ package com.re.bi.itemstore.application.item;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.re.bi.itemstore.application.tag.TagModel;
 import com.re.bi.itemstore.domain.item.Item;
 import com.re.bi.itemstore.domain.item.ItemDateTime;
+import com.re.bi.itemstore.domain.item.ItemTags;
 import com.re.bi.itemstore.domain.item.ItemValue;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Relation(collectionRelation = "models")
 public class ItemModel extends RepresentationModel<ItemModel> {
@@ -31,16 +29,15 @@ public class ItemModel extends RepresentationModel<ItemModel> {
   private ItemDateTime updateDateTime;
 
   @JsonProperty("tags")
-  private Set<TagModel> tags;
+  @JsonSerialize(converter = ItemTagsConverter.class)
+  private ItemTags tags;
 
   public ItemModel(Item item) {
     this.id = item.getId();
     this.value = item.getValue();
     this.creationDateTime = item.getCreationDateTime();
     this.updateDateTime = item.getUpdateDateTime();
-    this.tags = item.getTags().stream()
-        .map(TagModel::new)
-        .collect(Collectors.toSet());
+    this.tags = item.getTags();
   }
 
   @Override

@@ -2,16 +2,13 @@ package com.re.bi.itemstore.application;
 
 import com.re.bi.itemstore.domain.item.Item;
 import com.re.bi.itemstore.domain.item.ItemRepository;
+import com.re.bi.itemstore.domain.item.ItemTags;
 import com.re.bi.itemstore.domain.item.ItemValue;
-import com.re.bi.itemstore.domain.tag.Tag;
-import com.re.bi.itemstore.domain.tag.TagRepository;
-import com.re.bi.itemstore.domain.tag.TagValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,23 +17,12 @@ public class ItemStoreTestDataRunner implements CommandLineRunner {
   @Autowired
   private ItemRepository itemRepository;
 
-  @Autowired
-  private TagRepository tagRepository;
-
   @Override
   public void run(String... args) {
-    List<Tag> tagList = new ArrayList<>();
-    for (int i = 0; i < 10; i++) {
-      tagList.add(new Tag(new TagValue("Tag" + i)));
-    }
-
-    Set<Tag> tags = new HashSet<>(tagRepository.saveAll(tagList));
-
+    Set<String> tags = Set.of("ABC", "XYZ", "123");
     List<Item> items = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
-      Item item = new Item(new ItemValue(i*10+100));
-      //item.setTags(tags);
-      items.add(item);
+      items.add(new Item(new ItemValue(i*10+100), new ItemTags(tags)));
     }
     itemRepository.saveAll(items);
   }

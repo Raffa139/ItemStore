@@ -1,12 +1,9 @@
 package com.re.bi.itemstore.domain.item;
 
 import com.re.bi.itemstore.domain.AbstractEntity;
-import com.re.bi.itemstore.domain.tag.Tag;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "TAB_ITEM")
@@ -29,21 +26,21 @@ public class Item extends AbstractEntity {
   @AttributeOverride(name = "value", column = @Column(name = "ITEM_UPDATE_DATE"))
   private ItemDateTime updateDateTime;
 
-  @ManyToMany
-  @JoinTable(
-      name = "TAB_TAGGED_ITEM",
-      joinColumns = @JoinColumn(name = "ITEM_ID"),
-      inverseJoinColumns = @JoinColumn(name = "ITAG_ID")
-  )
-  private Set<Tag> tags;
+  @Embedded
+  @AttributeOverride(name = "value", column = @Column(name = "ITEM_TAGS"))
+  private ItemTags tags;
 
   protected Item() {
+  }
+
+  public Item(ItemValue value, ItemTags tags) {
+    this(value);
+    this.tags = tags;
   }
 
   public Item(ItemValue value) {
     this.value = value;
     this.creationDateTime = new ItemDateTime(LocalDateTime.now());
-    this.tags = new HashSet<>();
   }
 
   @Override
@@ -63,16 +60,8 @@ public class Item extends AbstractEntity {
     return updateDateTime;
   }
 
-  public Set<Tag> getTags() {
+  public ItemTags getTags() {
     return tags;
-  }
-
-  public void setTags(Set<Tag> tags) {
-    this.tags = tags;
-  }
-
-  public void addTag(Tag tag) {
-    this.tags.add(tag);
   }
 
   public void updateItemValue(ItemValue value) {

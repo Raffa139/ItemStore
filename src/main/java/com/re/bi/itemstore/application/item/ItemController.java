@@ -1,12 +1,16 @@
 package com.re.bi.itemstore.application.item;
 
+import com.re.bi.itemstore.application.item.search.ItemSpecification;
+import com.re.bi.itemstore.application.item.search.ItemSpecificationBuilder;
+import com.re.bi.itemstore.application.item.search.ItemTagsSearchCriteria;
+import com.re.bi.itemstore.application.item.search.ItemValueSearchCriteria;
 import com.re.bi.itemstore.domain.item.Item;
 import com.re.bi.itemstore.domain.item.ItemRepository;
+import com.re.bi.itemstore.domain.item.ItemTags;
 import com.re.bi.itemstore.domain.item.ItemValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +30,21 @@ public class ItemController {
   @GetMapping
   public ResponseEntity<CollectionModel<ItemModel>> getItems(@PageableDefault(Integer.MAX_VALUE) Pageable pageable,
                                                              @RequestParam(value = "search", required = false) String search) {
-    Specification<Item> specification = null;
+    ItemSpecification specification = null;
 
+    // TODO: 01.07.2022: Error handling
     if (search != null) {
-      ItemValueSpecification.ItemValueSpecificationBuilder builder = ItemValueSpecification.newItemValueSpecification();
-      Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?),");
+      ItemSpecificationBuilder builder = new ItemSpecificationBuilder();
+      Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?|\\(([\\w;]+?)\\)),");
       Matcher matcher = pattern.matcher(search + ",");
       while (matcher.find()) {
-        builder.with(matcher.group(1), matcher.group(2), new ItemValue(Integer.parseInt(matcher.group(3))));
+        String searchField = matcher.group(1);
+        // TODO: 01.07.2022: Use Metamodels?
+        if (searchField.equals("value")) {
+          builder.with(new ItemValueSearchCriteria(matcher.group(1), matcher.group(2), new ItemValue(Integer.parseInt(matcher.group(3)))));
+        } else if (searchField.equals("tags")) {
+          builder.with(new ItemTagsSearchCriteria(matcher.group(1), matcher.group(2), new ItemTags(matcher.group(4))));
+        }
       }
       specification = builder.build();
     }

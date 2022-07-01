@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 @Component
@@ -19,10 +20,12 @@ public class ItemStoreTestDataRunner implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    Set<String> tags = Set.of("ABC", "XYZ", "123");
+    Set<String> tagSetOne = Set.of("ABC", "XYZ", "123");
+    Set<String> tagSetTwo = Set.of("FFF", "456", "REN");
+    Random random = new Random();
     List<Item> items = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
-      items.add(new Item(new ItemValue(i*10+100), new ItemTags(tags)));
+      items.add(new Item(new ItemValue(i*10+100), new ItemTags(random.nextFloat() > 0.5f ? tagSetOne : tagSetTwo)));
     }
     itemRepository.saveAll(items);
   }

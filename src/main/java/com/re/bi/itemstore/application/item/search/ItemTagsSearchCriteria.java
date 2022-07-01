@@ -1,31 +1,34 @@
-package com.re.bi.itemstore.application.item;
+package com.re.bi.itemstore.application.item.search;
 
-import com.re.bi.itemstore.domain.item.ItemValue;
+import com.re.bi.itemstore.domain.item.ItemTags;
 
 import java.util.Objects;
 
-public class ItemValueSearchCriteria {
+public class ItemTagsSearchCriteria implements ItemSearchCriteria<ItemTags> {
   private String key;
 
   private String operation;
 
-  private ItemValue value;
+  private ItemTags value;
 
-  public ItemValueSearchCriteria(String key, String operation, ItemValue value) {
+  public ItemTagsSearchCriteria(String key, String operation, ItemTags value) {
     this.key = key;
     this.operation = operation;
     this.value = value;
   }
 
+  @Override
   public String getKey() {
     return key;
   }
 
+  @Override
   public String getOperation() {
     return operation;
   }
 
-  public ItemValue getValue() {
+  @Override
+  public ItemTags getValue() {
     return value;
   }
 
@@ -34,7 +37,7 @@ public class ItemValueSearchCriteria {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    ItemValueSearchCriteria that = (ItemValueSearchCriteria) o;
+    ItemTagsSearchCriteria that = (ItemTagsSearchCriteria) o;
 
     if (!Objects.equals(key, that.key)) return false;
     if (!Objects.equals(operation, that.operation)) return false;

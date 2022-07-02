@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.regex.Matcher;
@@ -82,5 +83,11 @@ public class ItemController {
     service.update(item, model.getValue());
   }
 
-  // TODO: 02.07.2022: OptimisticLocking
+  @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+  @ResponseStatus(HttpStatus.CONFLICT)
+  public ResponseEntity<String> handleOptimisticLockExceptions(ObjectOptimisticLockingFailureException e) {
+    return ResponseEntity
+        .status(HttpStatus.CONFLICT)
+        .body("Concurrent access error.");
+  }
 }

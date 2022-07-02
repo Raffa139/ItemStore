@@ -1,10 +1,14 @@
 package com.re.bi.itemstore.domain;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 import java.util.Objects;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
+  @Version
+  private Long version;
+
   protected AbstractEntity() {
   }
 

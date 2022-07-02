@@ -7,10 +7,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "TAB_ITEM")
+@AttributeOverride(name = "version", column = @Column(name = "ITEM_VERSION", nullable = false))
 public class Item extends AbstractEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_seq_gen")
-  @SequenceGenerator(name = "item_seq_gen", initialValue = 1000, allocationSize = 1)
+  @SequenceGenerator(name = "item_seq_gen", sequenceName = "SEQ_ITEM_ID", initialValue = 1000, allocationSize = 1)
   @Column(name = "ITEM_ID", nullable = false)
   private Long id;
 

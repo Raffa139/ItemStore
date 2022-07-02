@@ -5,17 +5,16 @@ import com.re.bi.itemstore.application.item.search.ItemSpecification;
 import com.re.bi.itemstore.application.item.search.ItemSpecificationBuilder;
 import com.re.bi.itemstore.application.item.search.ItemTagsSearchCriteria;
 import com.re.bi.itemstore.application.item.search.ItemValueSearchCriteria;
-import com.re.bi.itemstore.domain.item.Item;
-import com.re.bi.itemstore.domain.item.ItemRepository;
-import com.re.bi.itemstore.domain.item.ItemTags;
-import com.re.bi.itemstore.domain.item.ItemValue;
+import com.re.bi.itemstore.domain.item.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -30,6 +29,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ItemController {
   @Autowired
   private ItemRepository itemRepository;
+
+  @Autowired
+  private ItemService service;
 
   @GetMapping
   public ResponseEntity<CollectionModel<ItemModel>> getItems(@PageableDefault(Integer.MAX_VALUE) Pageable pageable,
@@ -64,20 +66,32 @@ public class ItemController {
     Optional<Item> optional = itemRepository.findById(id);
 
     if (optional.isEmpty()) {
-      return ResponseEntity.notFound().build();
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     return ResponseEntity.ok(new ItemModel(optional.get()));
   }
 
-  @JsonView(ItemViews.IdOnly.class)
+  @JsonView(ItemViews.IdOnlyResponse.class)
   @PostMapping(path = "/create")
-  public ResponseEntity<ItemModel> createItem(@RequestBody @JsonView(ItemViews.Request.class) ItemModel model) {
+  public ResponseEntity<ItemModel> createItem(@RequestBody @JsonView(ItemViews.CreateRequest.class) ItemModel model) {
     Item item = new Item(model.getValue(), model.getTags());
     item = itemRepository.save(item);
 
     return ResponseEntity
         .created(linkTo(methodOn(ItemController.class).getItem(item.getId())).toUri())
         .body(new ItemModel(item));
+  }
+
+  @PutMapping(path = "/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public void updateItem(@PathVariable Long id, @RequestBody @JsonView(ItemViews.UpdateRequest.class) ItemModel model) {
+    Optional<Item> optional = itemRepository.findById(id);
+
+    if (optional.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    service.updateItem(optional.get(), model.getValue());
   }
 }

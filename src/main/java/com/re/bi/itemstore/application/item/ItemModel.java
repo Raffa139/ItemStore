@@ -16,11 +16,11 @@ import java.util.Objects;
 
 @Relation(collectionRelation = "models")
 public class ItemModel extends RepresentationModel<ItemModel> {
-  @JsonView(ItemViews.IdOnly.class)
+  @JsonView(ItemViews.IdOnlyResponse.class)
   @JsonProperty("id")
   private Long id;
 
-  @JsonView(ItemViews.Request.class)
+  @JsonView({ItemViews.CreateRequest.class, ItemViews.UpdateRequest.class})
   @JsonProperty("value")
   @JsonSerialize(converter = ItemValueConverterOut.class)
   @JsonDeserialize(converter = ItemValueConverterIn.class)
@@ -34,7 +34,7 @@ public class ItemModel extends RepresentationModel<ItemModel> {
   @JsonSerialize(converter = ItemDateTimeConverterOut.class)
   private ItemDateTime updateDateTime;
 
-  @JsonView(ItemViews.Request.class)
+  @JsonView(ItemViews.CreateRequest.class)
   @JsonProperty("tags")
   @JsonSerialize(converter = ItemTagsConverterOut.class)
   @JsonDeserialize(converter = ItemTagsConverterIn.class)

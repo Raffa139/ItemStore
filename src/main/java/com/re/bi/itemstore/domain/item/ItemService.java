@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -22,7 +22,7 @@ public class ItemService {
     Optional<Item> item = repository.findById(id);
 
     if (item.isEmpty()) {
-      throw new EntityNotFoundException();
+      throw new ItemNotFoundException();
     }
 
     return item.get();
@@ -32,12 +32,10 @@ public class ItemService {
     return repository.save(item);
   }
 
-  public Item update(Item item, ItemValue newValue) {
+  @Transactional
+  public void update(Item item, ItemValue newValue) {
     if (!item.getValue().equals(newValue)) {
       item.updateItemValue(newValue);
-      return repository.save(item);
     }
-
-    return null;
   }
 }

@@ -36,7 +36,6 @@ public class ItemController {
                                                              @RequestParam(value = "search", required = false) String search) {
     ItemSpecification specification = null;
 
-    // TODO: 01.07.2022: Error handling
     // TODO: 02.07.2022: Links
     if (search != null) {
       ItemSpecificationBuilder builder = new ItemSpecificationBuilder();
@@ -62,11 +61,6 @@ public class ItemController {
   @GetMapping(path = "/{id}")
   public ResponseEntity<ItemModel> getItem(@PathVariable Long id) {
     Item item = service.findById(id);
-
-    /*if (optional.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }*/
-
     return ResponseEntity.ok(new ItemModel(item));
   }
 
@@ -85,11 +79,8 @@ public class ItemController {
   @ResponseStatus(HttpStatus.OK)
   public void updateItem(@PathVariable Long id, @RequestBody @JsonView(ItemViews.UpdateRequest.class) ItemModel model) {
     Item item = service.findById(id);
-
-    /*if (optional.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }*/
-
     service.update(item, model.getValue());
   }
+
+  // TODO: 02.07.2022: OptimisticLocking
 }

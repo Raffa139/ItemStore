@@ -1,5 +1,6 @@
 package com.re.bi.itemstore.application.item;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.re.bi.itemstore.application.item.search.ItemSpecification;
 import com.re.bi.itemstore.application.item.search.ItemSpecificationBuilder;
 import com.re.bi.itemstore.application.item.search.ItemTagsSearchCriteria;
@@ -21,6 +22,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping(path = "/items")
 public class ItemController {
@@ -33,6 +37,7 @@ public class ItemController {
     ItemSpecification specification = null;
 
     // TODO: 01.07.2022: Error handling
+    // TODO: 02.07.2022: Links
     if (search != null) {
       ItemSpecificationBuilder builder = new ItemSpecificationBuilder();
       Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?|\\(([\\w;]+?)\\)),");
@@ -63,5 +68,16 @@ public class ItemController {
     }
 
     return ResponseEntity.ok(new ItemModel(optional.get()));
+  }
+
+  @JsonView(ItemViews.IdOnly.class)
+  @PostMapping(path = "/create")
+  public ResponseEntity<ItemModel> createItem(@RequestBody @JsonView(ItemViews.Request.class) ItemModel model) {
+    Item item = new Item(model.getValue(), model.getTags());
+    item = itemRepository.save(item);
+
+    return ResponseEntity
+        .created(linkTo(methodOn(ItemController.class).getItem(item.getId())).toUri())
+        .body(new ItemModel(item));
   }
 }

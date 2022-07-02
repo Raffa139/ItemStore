@@ -1,7 +1,10 @@
 package com.re.bi.itemstore.application.item;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.re.bi.itemstore.application.item.converter.*;
 import com.re.bi.itemstore.domain.item.Item;
 import com.re.bi.itemstore.domain.item.ItemDateTime;
 import com.re.bi.itemstore.domain.item.ItemTags;
@@ -13,24 +16,32 @@ import java.util.Objects;
 
 @Relation(collectionRelation = "models")
 public class ItemModel extends RepresentationModel<ItemModel> {
+  @JsonView(ItemViews.IdOnly.class)
   @JsonProperty("id")
   private Long id;
 
+  @JsonView(ItemViews.Request.class)
   @JsonProperty("value")
-  @JsonSerialize(converter = ItemValueConverter.class)
+  @JsonSerialize(converter = ItemValueConverterOut.class)
+  @JsonDeserialize(converter = ItemValueConverterIn.class)
   private ItemValue value;
 
   @JsonProperty("creationDateTime")
-  @JsonSerialize(converter = ItemDateTimeConverter.class)
+  @JsonSerialize(converter = ItemDateTimeConverterOut.class)
   private ItemDateTime creationDateTime;
 
   @JsonProperty("updateDateTime")
-  @JsonSerialize(converter = ItemDateTimeConverter.class)
+  @JsonSerialize(converter = ItemDateTimeConverterOut.class)
   private ItemDateTime updateDateTime;
 
+  @JsonView(ItemViews.Request.class)
   @JsonProperty("tags")
-  @JsonSerialize(converter = ItemTagsConverter.class)
+  @JsonSerialize(converter = ItemTagsConverterOut.class)
+  @JsonDeserialize(converter = ItemTagsConverterIn.class)
   private ItemTags tags;
+
+  protected ItemModel() {
+  }
 
   public ItemModel(Item item) {
     this.id = item.getId();
@@ -38,6 +49,14 @@ public class ItemModel extends RepresentationModel<ItemModel> {
     this.creationDateTime = item.getCreationDateTime();
     this.updateDateTime = item.getUpdateDateTime();
     this.tags = item.getTags();
+  }
+
+  public ItemValue getValue() {
+    return value;
+  }
+
+  public ItemTags getTags() {
+    return tags;
   }
 
   @Override

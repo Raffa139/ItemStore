@@ -39,7 +39,6 @@ public class ItemController {
       Matcher matcher = pattern.matcher(search + ",");
       while (matcher.find()) {
         String searchField = matcher.group(1);
-        // TODO: 01.07.2022: Use Metamodels?
         if (searchField.equals("value")) {
           builder.with(new ItemValueSearchCriteria(matcher.group(1), matcher.group(2), new ItemValue(Integer.parseInt(matcher.group(3)))));
         } else if (searchField.equals("tags")) {

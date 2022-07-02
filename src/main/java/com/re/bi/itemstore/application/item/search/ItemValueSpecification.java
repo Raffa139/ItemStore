@@ -18,13 +18,12 @@ public class ItemValueSpecification implements ItemSpecification {
 
   @Override
   public Predicate toPredicate(Root<Item> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-    // TODO: 01.07.2022: >= <= < >
     String operation = criteria.getOperation().toLowerCase();
     switch (operation) {
       case ">":
-        return builder.greaterThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue().getValue());
+        return builder.greaterThan(root.get(criteria.getKey()), criteria.getValue().getValue());
       case "<":
-        return builder.lessThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue().getValue());
+        return builder.lessThan(root.get(criteria.getKey()), criteria.getValue().getValue());
       case ":":
         return builder.equal(root.get(criteria.getKey()), criteria.getValue().getValue());
       default:

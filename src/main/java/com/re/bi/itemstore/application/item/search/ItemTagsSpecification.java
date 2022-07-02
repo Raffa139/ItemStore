@@ -19,13 +19,11 @@ public class ItemTagsSpecification implements ItemSpecification {
 
   @Override
   public Predicate toPredicate(Root<Item> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-    // TODO: 01.07.2022: Ignore case
-    // TODO: 01.07.2022: Metamodels
     String operation = criteria.getOperation().toLowerCase();
     if (":".equals(operation)) {
       List<String> tags = criteria.getValue().toList();
       return builder.or(tags.stream()
-          .map(tag -> builder.like(root.get(criteria.getKey()).get("value"), "%" + tag + "%"))
+          .map(tag -> builder.like(builder.lower(root.get(criteria.getKey()).get("value")), "%" + tag.toLowerCase() + "%"))
           .toArray(Predicate[]::new));
     }
     throw new UnsupportedOperationException(operation);

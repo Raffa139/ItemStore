@@ -5,7 +5,10 @@ import com.re.bi.itemstore.application.item.search.ItemSpecification;
 import com.re.bi.itemstore.application.item.search.ItemSpecificationBuilder;
 import com.re.bi.itemstore.application.item.search.ItemTagsSearchCriteria;
 import com.re.bi.itemstore.application.item.search.ItemValueSearchCriteria;
-import com.re.bi.itemstore.domain.item.*;
+import com.re.bi.itemstore.domain.item.Item;
+import com.re.bi.itemstore.domain.item.ItemService;
+import com.re.bi.itemstore.domain.item.ItemTags;
+import com.re.bi.itemstore.domain.item.ItemValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +17,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -27,9 +28,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping(path = "/items")
 public class ItemController {
-  @Autowired
-  private ItemRepository itemRepository;
-
   @Autowired
   private ItemService service;
 
@@ -55,7 +53,7 @@ public class ItemController {
       specification = builder.build();
     }
 
-    Page<Item> items = itemRepository.findAll(specification, pageable);
+    Page<Item> items = service.findPage(specification, pageable);
     return ResponseEntity.ok(CollectionModel.of(items.stream()
         .map(ItemModel::new)
         .collect(Collectors.toList())));
@@ -63,20 +61,20 @@ public class ItemController {
 
   @GetMapping(path = "/{id}")
   public ResponseEntity<ItemModel> getItem(@PathVariable Long id) {
-    Optional<Item> optional = itemRepository.findById(id);
+    Item item = service.findById(id);
 
-    if (optional.isEmpty()) {
+    /*if (optional.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }
+    }*/
 
-    return ResponseEntity.ok(new ItemModel(optional.get()));
+    return ResponseEntity.ok(new ItemModel(item));
   }
 
   @JsonView(ItemViews.IdOnlyResponse.class)
   @PostMapping(path = "/create")
   public ResponseEntity<ItemModel> createItem(@RequestBody @JsonView(ItemViews.CreateRequest.class) ItemModel model) {
     Item item = new Item(model.getValue(), model.getTags());
-    item = itemRepository.save(item);
+    item = service.save(item);
 
     return ResponseEntity
         .created(linkTo(methodOn(ItemController.class).getItem(item.getId())).toUri())
@@ -86,12 +84,12 @@ public class ItemController {
   @PutMapping(path = "/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void updateItem(@PathVariable Long id, @RequestBody @JsonView(ItemViews.UpdateRequest.class) ItemModel model) {
-    Optional<Item> optional = itemRepository.findById(id);
+    Item item = service.findById(id);
 
-    if (optional.isEmpty()) {
+    /*if (optional.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }
+    }*/
 
-    service.updateItem(optional.get(), model.getValue());
+    service.update(item, model.getValue());
   }
 }

@@ -43,7 +43,7 @@ public class ItemModel extends RepresentationModel<ItemModel> {
   protected ItemModel() {
   }
 
-  public ItemModel(Item item) {
+  protected ItemModel(Item item) {
     this.id = item.getId();
     this.value = item.getValue();
     this.creationDateTime = item.getCreationDateTime();

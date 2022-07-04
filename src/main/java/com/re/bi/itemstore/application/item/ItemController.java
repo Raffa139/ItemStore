@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -32,12 +32,17 @@ public class ItemController {
   @Autowired
   private ItemService service;
 
+  @Autowired
+  private ItemModelAssembler itemModelAssembler;
+
+  @Autowired
+  private PagedResourcesAssembler<Item> pagedResourcesAssembler;
+
   @GetMapping
   public ResponseEntity<CollectionModel<ItemModel>> getItems(@PageableDefault(Integer.MAX_VALUE) Pageable pageable,
                                                              @RequestParam(value = "search", required = false) String search) {
     ItemSpecification specification = null;
 
-    // TODO: 02.07.2022: Links
     if (search != null) {
       ItemSpecificationBuilder builder = new ItemSpecificationBuilder();
       Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?|\\(([\\w;]+?)\\)),");
@@ -54,15 +59,13 @@ public class ItemController {
     }
 
     Page<Item> items = service.findPage(specification, pageable);
-    return ResponseEntity.ok(CollectionModel.of(items.stream()
-        .map(ItemModel::new)
-        .collect(Collectors.toList())));
+    return ResponseEntity.ok(pagedResourcesAssembler.toModel(items, itemModelAssembler));
   }
 
   @GetMapping(path = "/{id}")
   public ResponseEntity<ItemModel> getItem(@PathVariable Long id) {
     Item item = service.findById(id);
-    return ResponseEntity.ok(new ItemModel(item));
+    return ResponseEntity.ok(itemModelAssembler.toModel(item));
   }
 
   @JsonView(ItemViews.IdOnlyResponse.class)
@@ -73,7 +76,7 @@ public class ItemController {
 
     return ResponseEntity
         .created(linkTo(methodOn(ItemController.class).getItem(item.getId())).toUri())
-        .body(new ItemModel(item));
+        .body(itemModelAssembler.toModel(item));
   }
 
   @PutMapping(path = "/{id}")

@@ -2,6 +2,7 @@ package com.re.bi.itemstore.domain.item;
 
 import com.re.bi.itemstore.application.item.search.ItemSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ public class ItemService {
   @Autowired
   private ItemRepository repository;
 
+  @Cacheable("items")
   public Page<Item> findPage(ItemSpecification specification, Pageable pageable) {
     return repository.findAll(specification, pageable);
   }

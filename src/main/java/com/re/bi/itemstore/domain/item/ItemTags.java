@@ -25,6 +25,11 @@ public class ItemTags extends AbstractValueObject<String> {
   }
 
   @Override
+  public int compareTo(String o) {
+    return getValue().compareTo(o);
+  }
+
+  @Override
   protected boolean valid(String value) {
     return !value.isBlank() && super.valid(value);
   }

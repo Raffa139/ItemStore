@@ -4,7 +4,7 @@ import javax.persistence.MappedSuperclass;
 import java.util.Objects;
 
 @MappedSuperclass
-public abstract class AbstractValueObject<V> {
+public abstract class AbstractValueObject<V> implements Comparable<V> {
   private V value;
 
   protected AbstractValueObject() {

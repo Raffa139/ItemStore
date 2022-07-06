@@ -12,4 +12,9 @@ public class ItemValue extends AbstractValueObject<Integer> {
   public ItemValue(Integer value) {
     super(value);
   }
+
+  @Override
+  public int compareTo(Integer o) {
+    return Integer.compare(getValue(), o);
+  }
 }

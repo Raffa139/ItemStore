@@ -40,8 +40,10 @@ public class Item extends AbstractEntity {
   }
 
   public Item(ItemValue value) {
+    LocalDateTime now = LocalDateTime.now();
     this.value = value;
-    this.creationDateTime = new ItemDateTime(LocalDateTime.now());
+    this.creationDateTime = new ItemDateTime(now);
+    this.updateDateTime = new ItemDateTime(now);
   }
 
   @Override

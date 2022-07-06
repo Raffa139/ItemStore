@@ -15,6 +15,11 @@ public class ItemDateTime extends AbstractValueObject<LocalDateTime> {
   }
 
   @Override
+  public int compareTo(LocalDateTime o) {
+    return getValue().compareTo(o);
+  }
+
+  @Override
   protected boolean valid(LocalDateTime value) {
     LocalDateTime today = LocalDateTime.now();
     return (value.isEqual(today) || value.isBefore(today)) && super.valid(value);

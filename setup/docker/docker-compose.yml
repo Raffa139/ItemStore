@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  item-store-app:
+    image: item-store:1.0
+    container_name: ITEM_STORE_APP
+    environment:
+      - sys_items_expiration_time-ms=300000
+      - sys_items_expiration_check-delay-ms=30000
+      - sys_items_expiration_initial-delay-ms=10000
+    ports:
+      - "8080:8080"
+    networks:
+      - item-store-network
+
+  item-store-db:
+    image: postgres:14
+    container_name: ITEM_STORE_DB
+    environment:
+      - POSTGRES_USER=itemstore
+      - POSTGRES_PASSWORD=secret-password
+    ports:
+      - "5432:5432"
+    volumes:
+      - item-store-pg-data:/var/lib/postgresql/data
+    networks:
+      - item-store-network
+
+volumes:
+  item-store-pg-data:
+
+networks:
+  item-store-network:
+    driver: bridge

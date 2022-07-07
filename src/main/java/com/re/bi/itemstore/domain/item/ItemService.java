@@ -38,7 +38,9 @@ public class ItemService {
   }
 
   public Item save(Item item) {
-    return repository.save(item);
+    Item created = repository.save(item);
+    cacheManager.getCache("items").clear();
+    return created;
   }
 
   @Transactional

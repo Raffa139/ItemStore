@@ -15,8 +15,8 @@ public class ItemStoreScheduler {
   private Long expirationTime;
 
   @Scheduled(
-      fixedDelayString = "${sys.items.expiration.check-delay-ms}",
-      initialDelayString = "${sys.items.expiration.initial-delay-ms}"
+      fixedDelayString = "${sys.items.expiration.job.delay-ms}",
+      initialDelayString = "${sys.items.expiration.job.initial-delay-ms}"
   )
   public void deleteExpiredItems() {
     service.expireItems(expirationTime);

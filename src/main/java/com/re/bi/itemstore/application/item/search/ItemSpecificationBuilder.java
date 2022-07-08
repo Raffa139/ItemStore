@@ -1,5 +1,6 @@
 package com.re.bi.itemstore.application.item.search;
 
+import com.re.bi.itemstore.domain.item.Item;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -19,20 +20,20 @@ public class ItemSpecificationBuilder {
     return this;
   }
 
-  public ItemSpecification build() {
-    List<ItemSpecification> specifications = criteriaList.stream()
+  public Specification<Item> build() {
+    List<Specification<Item>> specifications = criteriaList.stream()
         .map(c -> c instanceof ItemValueSearchCriteria ? new ItemValueSpecification(c) : new ItemTagsSpecification(c))
         .collect(Collectors.toList());
 
-    Optional<ItemSpecification> optional = specifications.stream().findFirst();
+    Optional<Specification<Item>> optional = specifications.stream().findFirst();
     if (optional.isEmpty()) {
       return null;
     }
 
-    ItemSpecification result = optional.get();
-    for (ItemSpecification specification : specifications) {
+    Specification<Item> result = optional.get();
+    for (Specification<Item> specification : specifications) {
       if (!specification.equals(result)) {
-        result = (ItemSpecification) Specification.where(result).and(specification);
+        result = Specification.where(result).and(specification);
       }
     }
 

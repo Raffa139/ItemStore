@@ -12,6 +12,7 @@ import com.re.bi.itemstore.domain.item.ItemValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
@@ -41,7 +42,7 @@ public class ItemController {
   @GetMapping
   public ResponseEntity<CollectionModel<ItemModel>> getItems(@PageableDefault(Integer.MAX_VALUE) Pageable pageable,
                                                              @RequestParam(value = "search", required = false) String search) {
-    ItemSpecification specification = null;
+    Specification<Item> specification = null;
 
     if (search != null) {
       ItemSpecificationBuilder builder = new ItemSpecificationBuilder();

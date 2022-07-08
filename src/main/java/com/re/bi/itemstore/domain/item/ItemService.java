@@ -6,6 +6,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,7 +24,7 @@ public class ItemService {
   private CacheManager cacheManager;
 
   @Cacheable("items")
-  public Page<Item> findPage(ItemSpecification specification, Pageable pageable) {
+  public Page<Item> findPage(Specification<Item> specification, Pageable pageable) {
     return repository.findAll(specification, pageable);
   }
 

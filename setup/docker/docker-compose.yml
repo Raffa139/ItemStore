@@ -3,6 +3,9 @@ version: '3'
 services:
   item-store-app:
     image: item-store:1.0
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
     container_name: ITEM_STORE_APP
     environment:
       - sys_items_expiration_time-ms=300000

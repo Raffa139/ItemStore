@@ -9,8 +9,11 @@ services:
     container_name: ITEM_STORE_APP
     environment:
       - sys_items_expiration_time-ms=300000
+#     - sys_items_test-data=false
     ports:
       - "8080:8080"
+    depends_on:
+      - item-store-db
     networks:
       - item-store-network
 

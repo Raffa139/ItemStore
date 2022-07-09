@@ -22,6 +22,7 @@ will be the response.
 
 Further API specs are documented in the _openapi.yml_ and can be
 checked out [here](https://app.swaggerhub.com/apis-docs/RAFFAE/item-store/1.0).
+
 ---
 ### How to configure
 > sys_items_expiration_time-ms

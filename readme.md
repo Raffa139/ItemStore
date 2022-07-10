@@ -1,5 +1,5 @@
 ## Item store
-The application is running with Java 17, Spring Boot and a PostgreSQL database.
+The application is running with Java 11, Spring Boot and a PostgreSQL database.
 ### How to run
 Open up a terminal and insert these commands at the project root.
 ```
@@ -9,7 +9,7 @@ docker-compose up
 ```
 
 The application should now be running locally on port `8080` and
-can be accessed at `http://localhost:8080/itemstore`. \
+can be accessed at `http://localhost:8080/itemstore/items`. \
 If desired test data can be created during application startup.
 
 Items expire after 5 minutes, expiration time is configurable.

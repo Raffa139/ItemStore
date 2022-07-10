@@ -6,6 +6,7 @@ import javax.persistence.Embeddable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Embeddable
 public class ItemTags extends AbstractValueObject<String> {
@@ -21,7 +22,7 @@ public class ItemTags extends AbstractValueObject<String> {
   }
 
   public List<String> toList() {
-    return Arrays.stream(getValue().split(";")).toList();
+    return Arrays.stream(getValue().split(";")).collect(Collectors.toList());
   }
 
   @Override

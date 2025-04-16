@@ -1,6 +1,14 @@
-## Item store
-The application is running with Java 11, Spring Boot and a PostgreSQL database.
-### How to run
+![Java 11](https://badgen.net/badge/Built%20with/Java%2011?icon=java)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?logo=spring&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-C71A36?logo=apachemaven&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+
+# Item store
+
+Item Store is a RESTful web application to manage and retrieve data items. This project focused on building a robust API with features including persistent data storage, concurrent data access, data expiration, and efficient search capabilities. Key functionalities included creating, retrieving, updating, and searching data items based on tags and values, with support for pagination and ordering.
+
+## How to run
 Open up a terminal and insert these commands at the project root.
 ```
 mvn clean install
@@ -23,8 +31,7 @@ will be the response.
 Further API specs are documented in the _openapi.yml_ and can be
 checked out [here](https://app.swaggerhub.com/apis-docs/RAFFAE/item-store/1.0).
 
----
-### How to configure
+## How to configure
 > sys_items_expiration_time-ms
 
 Adjust the expiration time of items by setting this env-variable
